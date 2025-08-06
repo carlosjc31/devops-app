@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Primeiro DevOps</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; text-align: center; }
+        .todo-form { margin: 20px 0; }
+        input { 
+            width: 70%; 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+        }
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover { background: #45a049; }
+        .todo-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e7f4e7;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Minha Primeira Aplicação DevOps</h1>
+        
+        <div class="todo-form">
+            <input type="text" id="todoInput" placeholder="Digite uma nova tarefa...">
+            <button onclick="addTodo()">Adicionar</button>
+        </div>
+        
+        <div id="todoList"></div>
+        
+        <div class="status">
+            <strong>Status da Aplicação: <span id="appStatus">Carregando...</span></strong>
+        </div>
+    </div>
+
+    <script>
+        // Carregar tarefas quando a página abrir
+        async function loadTodos() {
+            try {
+                const response = await fetch('/api/todos');
+                const todos = await response.json();
+                
+                const todoList = document.getElementById('todoList');
+                todoList.innerHTML = todos.map(todo => `
+                    <div class="todo-item">
+                        ${todo.completed ? '✅' : '⏳'} ${todo.text}
+                    </div>
+                `).join('');
+                
+                document.getElementById('appStatus').textContent = '🟢 Online e funcionando!';
+            } catch (error) {
+                document.getElementById('appStatus').textContent = '🔴 Erro de conexão';
+            }
+        }
+
+        // Adicionar nova tarefa
+        async function addTodo() {
+            const input = document.getElementById('todoInput');
+            const text = input.value.trim();
+            
+            if (!text) {
+                alert('Digite uma tarefa!');
+                return;
+            }
+
+            try {
+                await fetch('/api/todos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+                
+                input.value = '';
+                loadTodos(); // Recarregar a lista
+            } catch (error) {
+                alert('Erro ao adicionar tarefa!');
+            }
+        }
+
+        // Carregar tarefas ao abrir a página
+        loadTodos();
+
+        // Permitir adicionar tarefa com Enter
+        document.getElementById('todoInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTodo();
+        });
+    </script>
+</body>
+</html>
