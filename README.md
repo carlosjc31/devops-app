@@ -21,3 +21,4 @@ Esta é minha primeira aplicação DevOps - uma lista de tarefas simples que dem
 npm install
 npm start
 # Acesse http://localhost:3000
+# Automatizando o CI/CD
