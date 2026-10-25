@@ -1,9 +1,10 @@
 {
   "name": "meu-primeiro-devops",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Lista de tarefas usada para praticar CI/CD com Docker e GitHub Actions",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
